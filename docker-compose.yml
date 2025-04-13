@@ -1,29 +1,65 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_USER: quizapi_user
-      POSTGRES_PASSWORD: quizapi_password
-      POSTGRES_DB: quizapi_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./db_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-db:/docker-entrypoint-initdb.d
     ports:
-      - "5433:5432"
+      - "${POSTGRES_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgrest:
     image: postgrest/postgrest:latest
     container_name: postgrest
     environment:
-      PGRST_DB_URI: postgres://quizapi_user:quizapi_password@db:5432/quizapi_db
-      PGRST_DB_SCHEMA: public
-      PGRST_DB_ANON_ROLE: quizapi_user
+      PGRST_DB_URI: ${PGRST_DB_URI}
+      PGRST_DB_SCHEMA: ${PGRST_DB_SCHEMA}
+      PGRST_DB_ANON_ROLE: ${PGRST_DB_ANON_ROLE}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET}
+      PGRST_SERVER_PORT: ${PGRST_SERVER_PORT}
+    volumes:
+      - ./docker/postgrest/postgrest.conf:/etc/postgrest.conf
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PGRST_SERVER_PORT}:3000"
+    restart: unless-stopped
+    command: postgrest /etc/postgrest.conf
+
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    container_name: swagger
+    environment:
+      API_URL: http://localhost:${PGRST_SERVER_PORT}/
+      SWAGGER_JSON_URL: http://localhost:${PGRST_SERVER_PORT}/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgrest
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@quizapi.fr
+      PGADMIN_DEFAULT_PASSWORD: pgadmin_password
+    ports:
+      - "5050:80"
     depends_on:
       - db
-    ports:
-      - "3000:3000"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
-# volumes:
-#   db_data:
+volumes:
+  #b_data:
+  pgadmin_data:

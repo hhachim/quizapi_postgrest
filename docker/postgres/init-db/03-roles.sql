@@ -1,18 +1,68 @@
--- Create a role for anonymous users
+-- Création du rôle administrateur
+CREATE ROLE admin NOLOGIN;
+
+-- Création du rôle pour les utilisateurs anonymes
 CREATE ROLE anon NOLOGIN;
 
--- Create a role for authenticated users
+-- Création du rôle pour les utilisateurs authentifiés
 CREATE ROLE authenticated NOLOGIN;
 
--- Grant usage on the public schema to both roles
-GRANT USAGE ON SCHEMA public TO anon, authenticated;
+-- Création d'un utilisateur API pour PostgREST
+CREATE ROLE quizapi_authenticator WITH LOGIN PASSWORD 'quizapi_password' NOINHERIT;
 
--- Grant select permissions on all tables in the public schema to the anon role
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;
+-- Attribution des privilèges
+GRANT anon TO quizapi_authenticator;
+GRANT authenticated TO quizapi_authenticator;
+GRANT admin TO quizapi_authenticator;
 
--- Grant select, insert, update, and delete permissions on all tables in the public schema to the authenticated role
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
+-- Droits sur le schéma
+GRANT USAGE ON SCHEMA public TO anon, authenticated, admin;
 
--- Ensure future tables and sequences in the public schema inherit these permissions
+-- Droits pour le rôle anonyme (lecture seule pour les éléments publics)
+GRANT SELECT ON 
+    categories, 
+    quizzes,
+    tags,
+    quiz_tags,
+    plugins
+TO anon;
+
+-- Restrictions pour anon: limiter aux quiz publiés et publics
+CREATE POLICY quizzes_anon_policy ON quizzes 
+    FOR SELECT 
+    TO anon 
+    USING (status = 'PUBLISHED' AND is_public = TRUE AND deleted_at IS NULL);
+
+-- Droits pour les utilisateurs authentifiés
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON 
+    quiz_tags,
+    tags
+TO authenticated;
+
+-- Restreindre l'accès aux utilisateurs authentifiés pour qu'ils ne voient que leurs propres données ou les données publiques
+CREATE POLICY quizzes_authenticated_policy ON quizzes 
+    FOR ALL 
+    TO authenticated 
+    USING (
+        (status = 'PUBLISHED' AND is_public = TRUE) OR 
+        (created_by = current_setting('request.jwt.claim.user_id', true)::UUID)
+    );
+
+-- Droits pour les administrateurs (accès complet)
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO admin;
+
+-- S'assurer que les permissions s'appliquent aussi aux futures tables
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO admin;
+
+-- Activer Row Level Security sur toutes les tables
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plugins ENABLE ROW LEVEL SECURITY;
