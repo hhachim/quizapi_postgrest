@@ -49,10 +49,10 @@ services:
       - traefik_network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.postgrest.rule=Host(`pocs.hachim.fr`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.postgrest.rule=Host(`postgrest.pocs.hachim.fr`) && PathPrefix(`/api`)"
       - "traefik.http.routers.postgrest.entrypoints=websecure"
       - "traefik.http.routers.postgrest.tls=true"
-      - "traefik.http.routers.postgrest.tls.certresolver=myresolver"
+      #- "traefik.http.routers.postgrest.tls.certresolver=myresolver"
       - "traefik.http.routers.postgrest.middlewares=postgrest-stripprefix,cors-headers"
       - "traefik.http.middlewares.postgrest-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.cors-headers.headers.accessControlAllowMethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
@@ -67,9 +67,9 @@ services:
     container_name: swagger
     environment:
       # Configuration simplifiée de Swagger UI
-      SWAGGER_JSON_URL: "https://pocs.hachim.fr/api/"
+      SWAGGER_JSON_URL: "https://postgrest.pocs.hachim.fr/api/"
       # Utiliser l'URL de l'API directement
-      URL: "https://pocs.hachim.fr/api/"
+      URL: "https://postgrest.pocs.hachim.fr/api/"
       # Désactiver la validation qui peut provoquer des problèmes
       VALIDATOR_URL: "null"
       # Activer l'affichage de la durée des requêtes pour le débogage
@@ -85,7 +85,7 @@ services:
       - traefik_network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.swagger.rule=Host(`swagger.pocs.hachim.fr`)"
+      - "traefik.http.routers.swagger.rule=Host(`postgrest.pocs.hachim.fr`) && PathPrefix(`/swagger`)"
       - "traefik.http.routers.swagger.entrypoints=websecure"
       - "traefik.http.routers.swagger.tls=true"
       - "traefik.http.services.swagger.loadbalancer.server.port=8080"
