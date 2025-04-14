@@ -36,8 +36,31 @@ CREATE POLICY quiz_tags_read_policy ON quiz_tags
     TO anon, authenticated 
     USING (true);
 
-CREATE POLICY quiz_tags_write_policy ON quiz_tags 
-    FOR INSERT, UPDATE, DELETE 
+-- Correction: création de politiques séparées pour chaque opération au lieu d'une liste d'opérations
+CREATE POLICY quiz_tags_insert_policy ON quiz_tags 
+    FOR INSERT 
+    TO authenticated 
+    USING (
+        quiz_id IN (
+            SELECT id FROM quizzes 
+            WHERE created_by = current_setting('request.jwt.claim.user_id', true)::UUID
+        ) OR
+        current_setting('request.jwt.claim.role', true) = 'admin'
+    );
+
+CREATE POLICY quiz_tags_update_policy ON quiz_tags 
+    FOR UPDATE 
+    TO authenticated 
+    USING (
+        quiz_id IN (
+            SELECT id FROM quizzes 
+            WHERE created_by = current_setting('request.jwt.claim.user_id', true)::UUID
+        ) OR
+        current_setting('request.jwt.claim.role', true) = 'admin'
+    );
+
+CREATE POLICY quiz_tags_delete_policy ON quiz_tags 
+    FOR DELETE 
     TO authenticated 
     USING (
         quiz_id IN (
@@ -58,8 +81,25 @@ CREATE POLICY tags_read_policy ON tags
     TO anon, authenticated 
     USING (deleted_at IS NULL);
 
-CREATE POLICY tags_write_policy ON tags 
-    FOR INSERT, UPDATE, DELETE 
+-- Correction: création de politiques séparées pour chaque opération
+CREATE POLICY tags_insert_policy ON tags 
+    FOR INSERT 
+    TO authenticated 
+    USING (
+        created_by = current_setting('request.jwt.claim.user_id', true)::UUID OR
+        current_setting('request.jwt.claim.role', true) = 'admin'
+    );
+
+CREATE POLICY tags_update_policy ON tags 
+    FOR UPDATE 
+    TO authenticated 
+    USING (
+        created_by = current_setting('request.jwt.claim.user_id', true)::UUID OR
+        current_setting('request.jwt.claim.role', true) = 'admin'
+    );
+
+CREATE POLICY tags_delete_policy ON tags 
+    FOR DELETE 
     TO authenticated 
     USING (
         created_by = current_setting('request.jwt.claim.user_id', true)::UUID OR
