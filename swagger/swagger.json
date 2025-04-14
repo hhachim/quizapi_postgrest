@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-      "title": "QuizAPI",
-      "description": "API REST pour l'application de quiz",
-      "version": "1.0.0"
+      "title": "QuizAPI - V2",
+      "description": "API REST pour l'application de quiz-hachim",
+      "version": "1.0.2"
     },
     "servers": [
       {
