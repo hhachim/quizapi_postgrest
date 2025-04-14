@@ -66,11 +66,18 @@ services:
     image: swaggerapi/swagger-ui:latest
     container_name: swagger
     environment:
-      # Utiliser l'URL via Traefik en HTTPS
-      API_URL: "https://pocs.hachim.fr/api/"
+      # Configuration simplifiée de Swagger UI
       SWAGGER_JSON_URL: "https://pocs.hachim.fr/api/"
-    expose:
-      - "8080"
+      # Utiliser l'URL de l'API directement
+      URL: "https://pocs.hachim.fr/api/"
+      # Désactiver la validation qui peut provoquer des problèmes
+      VALIDATOR_URL: "null"
+      # Activer l'affichage de la durée des requêtes pour le débogage
+      DISPLAY_REQUEST_DURATION: "true"
+      # Traitement des erreurs
+      DEEP_LINKING: "true"
+    ports:
+      - "8080:8080"
     depends_on:
       - postgrest
     networks:

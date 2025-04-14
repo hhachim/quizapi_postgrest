@@ -36,11 +36,11 @@ CREATE POLICY quiz_tags_read_policy ON quiz_tags
     TO anon, authenticated 
     USING (true);
 
--- Correction: création de politiques séparées pour chaque opération au lieu d'une liste d'opérations
+-- Correction pour les politiques d'insertion avec WITH CHECK au lieu de USING
 CREATE POLICY quiz_tags_insert_policy ON quiz_tags 
     FOR INSERT 
     TO authenticated 
-    USING (
+    WITH CHECK (
         quiz_id IN (
             SELECT id FROM quizzes 
             WHERE created_by = current_setting('request.jwt.claim.user_id', true)::UUID
@@ -81,11 +81,11 @@ CREATE POLICY tags_read_policy ON tags
     TO anon, authenticated 
     USING (deleted_at IS NULL);
 
--- Correction: création de politiques séparées pour chaque opération
+-- Correction avec WITH CHECK pour INSERT
 CREATE POLICY tags_insert_policy ON tags 
     FOR INSERT 
     TO authenticated 
-    USING (
+    WITH CHECK (
         created_by = current_setting('request.jwt.claim.user_id', true)::UUID OR
         current_setting('request.jwt.claim.role', true) = 'admin'
     );
