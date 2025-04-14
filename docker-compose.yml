@@ -70,8 +70,8 @@ services:
       SWAGGER_JSON: "/app/swagger.json"
       API_URL: "https://postgrest.pocs.hachim.fr/api"
       VALIDATOR_URL: "null"
-    volumes:
-      - ./swagger/swagger.json:/app/swagger.json
+    # volumes:
+    #   - ./swagger/swagger.json:/app/swagger.json
     ports:
       - "8080:8080"
     depends_on:
