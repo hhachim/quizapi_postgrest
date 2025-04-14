@@ -46,7 +46,7 @@ VALUES
      (SELECT id FROM users WHERE username = 'admin')),
     
     ('Concepts avancés de JavaScript', 'Testez vos connaissances sur les closures, promises et async/await', 
-     'ADVANCED', 900, 80.00, 'PUBLISHED', TRUE, 
+     'HARD', 900, 80.00, 'PUBLISHED', TRUE, 
      (SELECT id FROM categories WHERE name = 'Programmation'), 
      (SELECT id FROM users WHERE username = 'admin')),
     

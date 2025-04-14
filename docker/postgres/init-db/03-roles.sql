@@ -1,5 +1,14 @@
--- Créer d'abord l'utilisateur de connexion principal qui correspond aux variables d'environnement
-CREATE USER quizapi_user WITH LOGIN PASSWORD 'quizapi_password';
+-- Ne pas créer l'utilisateur s'il existe déjà (il est créé par Docker lors du démarrage)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT FROM pg_catalog.pg_roles
+        WHERE rolname = 'quizapi_user'
+    ) THEN
+        CREATE USER quizapi_user WITH LOGIN PASSWORD 'quizapi_password';
+    END IF;
+END
+$$;
 
 -- Création du rôle administrateur
 CREATE ROLE admin NOLOGIN;
