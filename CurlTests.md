@@ -2,7 +2,7 @@ Je vais vous fournir quelques exemples de commandes curl pour tester votre API R
 ## OK
 
 ```bash
-curl -X GET "https://pocs.hachim.fr/api/categories" -H "Accept: application/json"
+curl -X GET "https://postgrest.pocs.hachim.fr/api/categories" -H "Accept: application/json"
 ```
 
 ### Pour tester la récupération des catégories (GET)

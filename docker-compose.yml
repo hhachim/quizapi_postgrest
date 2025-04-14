@@ -66,16 +66,11 @@ services:
     image: swaggerapi/swagger-ui:latest
     container_name: swagger
     environment:
-      # Configuration simplifiée de Swagger UI
-      SWAGGER_JSON_URL: "https://postgrest.pocs.hachim.fr/api/"
-      # Utiliser l'URL de l'API directement
-      URL: "https://postgrest.pocs.hachim.fr/api/"
-      # Désactiver la validation qui peut provoquer des problèmes
+      SWAGGER_JSON: "/app/swagger.json"
+      API_URL: "https://postgrest.pocs.hachim.fr/api"
       VALIDATOR_URL: "null"
-      # Activer l'affichage de la durée des requêtes pour le débogage
-      DISPLAY_REQUEST_DURATION: "true"
-      # Traitement des erreurs
-      DEEP_LINKING: "true"
+    volumes:
+      - ./swagger/swagger.json:/app/swagger.json
     ports:
       - "8080:8080"
     depends_on:
@@ -85,9 +80,13 @@ services:
       - traefik_network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.swagger.rule=Host(`postgrest.pocs.hachim.fr`) && PathPrefix(`/swagger`)"
+      #- "traefik.http.routers.swagger.rule=Host(`postgrest.pocs.hachim.fr`) && PathPrefix(`/docs`)"
+      - "traefik.http.routers.swagger.rule=Host(`postgrest.pocs.hachim.fr`)"
       - "traefik.http.routers.swagger.entrypoints=websecure"
       - "traefik.http.routers.swagger.tls=true"
+      #- "traefik.http.routers.swagger.middlewares=swagger-path-replace"
+      #- "traefik.http.middlewares.swagger-path-replace.replacepath.regex=^/docs/(.*)"
+      #- "traefik.http.middlewares.swagger-path-replace.replacepath.replacement=/$$1"
       - "traefik.http.services.swagger.loadbalancer.server.port=8080"
       
   pgadmin:

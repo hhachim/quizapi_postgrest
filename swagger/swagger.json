@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "https://pocs.hachim.fr/api",
+        "url": "https://postgrest.pocs.hachim.fr/api",
         "description": "API Production"
       }
     ],
