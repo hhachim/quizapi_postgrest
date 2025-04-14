@@ -1,3 +1,6 @@
+-- Créer d'abord l'utilisateur de connexion principal qui correspond aux variables d'environnement
+CREATE USER quizapi_user WITH LOGIN PASSWORD 'quizapi_password';
+
 -- Création du rôle administrateur
 CREATE ROLE admin NOLOGIN;
 
@@ -7,13 +10,10 @@ CREATE ROLE anon NOLOGIN;
 -- Création du rôle pour les utilisateurs authentifiés
 CREATE ROLE authenticated NOLOGIN;
 
--- Création d'un utilisateur API pour PostgREST
-CREATE ROLE quizapi_authenticator WITH LOGIN PASSWORD 'quizapi_password' NOINHERIT;
-
 -- Attribution des privilèges
-GRANT anon TO quizapi_authenticator;
-GRANT authenticated TO quizapi_authenticator;
-GRANT admin TO quizapi_authenticator;
+GRANT anon TO quizapi_user;
+GRANT authenticated TO quizapi_user;
+GRANT admin TO quizapi_user;
 
 -- Droits sur le schéma
 GRANT USAGE ON SCHEMA public TO anon, authenticated, admin;

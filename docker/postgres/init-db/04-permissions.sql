@@ -82,22 +82,30 @@ CREATE POLICY plugins_write_policy ON plugins
     TO admin 
     USING (true);
 
--- Fonction pour générer des tokens JWT
+-- Fonction pour générer des tokens JWT (utilisant pgjwt)
 CREATE OR REPLACE FUNCTION generate_jwt(
     user_id UUID,
     role TEXT
 ) RETURNS TEXT AS $$
 DECLARE
     jwt_token TEXT;
+    secret TEXT;
 BEGIN
-    -- Création du header du JWT
+    -- Récupérer le secret JWT depuis la configuration
+    BEGIN
+        secret := current_setting('app.jwt_secret');
+    EXCEPTION WHEN OTHERS THEN
+        secret := 'votre_secret_jwt_tres_securise_a_changer_en_production';
+    END;
+    
+    -- Création du header et payload du JWT
     jwt_token := jwt.sign(
         json_build_object(
             'role', role,
             'user_id', user_id,
             'exp', extract(epoch from now() + interval '1 day')::integer
         ),
-        current_setting('jwt.secret')
+        secret
     );
     
     RETURN jwt_token;
@@ -140,3 +148,6 @@ BEGIN
     RETURN result;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Définir la variable de configuration pour le secret JWT
+ALTER DATABASE quizapi_db SET app.jwt_secret TO 'votre_secret_jwt_tres_securise_a_changer_en_production';
