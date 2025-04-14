@@ -6,8 +6,12 @@ RUN apt-get update \
        git \
        make \
        gcc \
+       ca-certificates \
        postgresql-server-dev-15 \
     && rm -rf /var/lib/apt/lists/*
+
+# Configurer git pour ignorer la vérification SSL si nécessaire
+RUN git config --global http.sslVerify false
 
 # Cloner le dépôt pgjwt
 RUN cd /tmp \
