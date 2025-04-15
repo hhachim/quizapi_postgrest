@@ -139,7 +139,7 @@ BEGIN
     END;
     
     -- Création du header et payload du JWT
-    jwt_token := jwt.sign(
+    jwt_token := sign( --si l'extension est installée dans un schéma jwt alors faire : jwt.sign, sinon sign directement si dans le schema public
         json_build_object(
             'role', role,
             'user_id', user_id,
@@ -264,3 +264,5 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Rendre la fonction register accessible via RPC
 GRANT EXECUTE ON FUNCTION register TO anon;
+-- Rendre la fonction login accessible via RPC
+GRANT EXECUTE ON FUNCTION login TO anon;
