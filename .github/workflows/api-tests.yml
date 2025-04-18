@@ -31,7 +31,7 @@ jobs:
           chmod +x scripts/initialize-test-data.sh
       
       - name: Start services
-        run: docker-compose up -d
+        run: docker compose up -d
       
       - name: Wait for services to be ready
         run: |
@@ -70,4 +70,4 @@ jobs:
       
       - name: Stop services
         if: always()
-        run: docker-compose down
+        run: docker compose down
