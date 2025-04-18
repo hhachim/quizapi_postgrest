@@ -48,18 +48,32 @@ jobs:
       
       - name: Start services
         run: docker-compose up -d
-      
-      - name: Wait for services to be ready
+
+      - name: List networks and containers
         run: |
-          echo "Waiting for services to be ready..."
-          sleep 15
-          curl --retry 5 --retry-delay 5 --retry-connrefused http://postgrest:3000/
+          echo "Docker networks:"
+          docker network ls
+          echo "Containers:"
+          docker ps
+          echo "Network inspection:"
+          docker network inspect quizapi-network
+      - name: Inpsect postgrest
+        run: |
+          echo "begin inspect postgrest:"
+          docker inspect postgrest
       
-      - name: Initialize test data
-        run: ./scripts/initialize-test-data.sh http://postgrest:3000
+      # - name: Wait for services to be ready
+      #   run: |
+      #     echo "Waiting for services to be ready..."
+      #     sleep 15
+      #     # Exécuter curl dans un conteneur Docker connecté au réseau quizapi-network
+      #     docker run --rm --network quizapi-network appropriate/curl --retry 5 --retry-delay 5 --retry-connrefused http://postgrest:3000/
       
-      - name: Run API tests with Newman
-        run: ./scripts/run-tests.sh
+      # - name: Initialize test data
+      #   run: ./scripts/initialize-test-data.sh http://postgrest:3000
+      
+      # - name: Run API tests with Newman
+      #   run: ./scripts/run-tests.sh
       
       # - name: Upload test results
       #   uses: actions/upload-artifact@v3.1.2
@@ -68,21 +82,21 @@ jobs:
       #     name: newman-test-results
       #     path: tests/postman/results/
 
-      - name: Generate test summary
-        if: always()
-        run: |
-          echo "## API Test Results" >> $GITHUB_STEP_SUMMARY
-          if [ -f tests/postman/results/*-junit.xml ]; then
-            TOTAL=$(grep -c "<testcase" tests/postman/results/*-junit.xml)
-            FAILED=$(grep -c "<failure" tests/postman/results/*-junit.xml)
-            PASSED=$((TOTAL - FAILED))
-            echo "✅ $PASSED tests passed" >> $GITHUB_STEP_SUMMARY
-            if [ $FAILED -gt 0 ]; then
-              echo "❌ $FAILED tests failed" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
-          fi
+      # - name: Generate test summary
+      #   if: always()
+      #   run: |
+      #     echo "## API Test Results" >> $GITHUB_STEP_SUMMARY
+      #     if [ -f tests/postman/results/*-junit.xml ]; then
+      #       TOTAL=$(grep -c "<testcase" tests/postman/results/*-junit.xml)
+      #       FAILED=$(grep -c "<failure" tests/postman/results/*-junit.xml)
+      #       PASSED=$((TOTAL - FAILED))
+      #       echo "✅ $PASSED tests passed" >> $GITHUB_STEP_SUMMARY
+      #       if [ $FAILED -gt 0 ]; then
+      #         echo "❌ $FAILED tests failed" >> $GITHUB_STEP_SUMMARY
+      #       fi
+      #     else
+      #       echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+      #     fi
       
       - name: Stop services
         if: always()
