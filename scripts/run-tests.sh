@@ -55,7 +55,7 @@ fi
 
 # Exécuter Newman avec l'image personnalisée
 docker run --rm \
-    --network quizapi-network \
+    --network quizapi_postgrest_quizapi-network \
     -v "$(pwd):/etc/newman" \
     $NEWMAN_IMAGE \
     run "/etc/newman/$COLLECTION_FILE" \
