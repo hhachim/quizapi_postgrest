@@ -1,0 +1,36 @@
+@baseUrl = https://postgrest.pocs.hachim.fr/api
+@localUrl = http://localhost:3000
+
+### Variables pour les tests
+@newuser_email = user@example.com
+@newuser_password = pass
+
+### Login avec new user (succès attendu)
+# @name newUserLogin
+POST {{baseUrl}}/rpc/login
+Content-Type: application/json
+
+{
+    "email": "{{newuser_email}}",
+    "pass": "{{newuser_password}}"
+}
+
+### Tests pour le login admin
+> {%
+    // Vérifier le statut de la réponse
+    client.test("Le statut doit être 200 OK", function() {
+        client.assert(response.status === 200, "Statut de réponse attendu 200, reçu " + response.status);
+    });
+
+    // Vérifier que le corps contient un token JWT
+    client.test("La réponse doit contenir un token JWT", function() {
+        client.assert(response.body && response.body.length > 0, "Aucun token reçu");
+        client.assert(response.body.split('.').length === 3, "Format JWT invalide (doit avoir 3 parties séparées par des points)");
+    });
+
+    // Sauvegarder le token pour une utilisation ultérieure
+    if (response.body) {
+        client.global.set("admin_token", response.body);
+        client.log("Token administrateur enregistré pour une utilisation ultérieure");
+    }
+%}

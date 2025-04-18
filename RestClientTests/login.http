@@ -1,0 +1,100 @@
+@baseUrl = https://postgrest.pocs.hachim.fr/api
+@localUrl = http://localhost:3000
+
+### Variables pour les tests
+@admin_email = admin@quizapi.fr
+@admin_password = admin_password
+@invalid_email = nonexistent@example.com
+@invalid_password = wrongpassword
+
+### Login avec admin (succès attendu)
+# @name adminLogin
+POST {{baseUrl}}/rpc/login
+Content-Type: application/json
+
+{
+    "email": "{{admin_email}}",
+    "pass": "{{admin_password}}"
+}
+
+### Tests pour le login admin
+> {%
+    // Vérifier le statut de la réponse
+    client.test("Le statut doit être 200 OK", function() {
+        client.assert(response.status === 200, "Statut de réponse attendu 200, reçu " + response.status);
+    });
+
+    // Vérifier que le corps contient un token JWT
+    client.test("La réponse doit contenir un token JWT", function() {
+        client.assert(response.body && response.body.length > 0, "Aucun token reçu");
+        client.assert(response.body.split('.').length === 3, "Format JWT invalide (doit avoir 3 parties séparées par des points)");
+    });
+
+    // Sauvegarder le token pour une utilisation ultérieure
+    if (response.body) {
+        client.global.set("admin_token", response.body);
+        client.log("Token administrateur enregistré pour une utilisation ultérieure");
+    }
+%}
+
+### Login avec identifiants invalides (échec attendu)
+# @name invalidLogin
+POST {{baseUrl}}/rpc/login
+Content-Type: application/json
+
+{
+    "email": "{{invalid_email}}",
+    "pass": "{{invalid_password}}"
+}
+
+### Tests pour le login invalide
+> {%
+    // Le statut devrait être 200 car PostgREST renvoie souvent des erreurs personnalisées en 200
+    client.test("Le message d'erreur doit être reçu", function() {
+        client.assert(response.body === "Invalid email or password", "Message d'erreur attendu non reçu");
+    });
+%}
+
+### Login avec email valide mais mot de passe invalide
+# @name wrongPasswordLogin
+POST {{baseUrl}}/rpc/login
+Content-Type: application/json
+
+{
+    "email": "{{admin_email}}",
+    "pass": "{{invalid_password}}"
+}
+
+### Tests pour le login avec mot de passe invalide
+> {%
+    client.test("Le message d'erreur doit être reçu pour mot de passe invalide", function() {
+        client.assert(response.body === "Invalid email or password", "Message d'erreur attendu non reçu");
+    });
+%}
+
+### Login avec l'URL locale
+# @name localLogin
+POST {{localUrl}}/rpc/login
+Content-Type: application/json
+
+{
+    "email": "{{admin_email}}",
+    "pass": "{{admin_password}}"
+}
+
+### Tests pour le login local
+> {%
+    // Ces tests seront exécutés uniquement si le serveur local est disponible
+    if (response.status !== 0) {
+        client.test("Le statut local doit être 200 OK", function() {
+            client.assert(response.status === 200, "Statut de réponse attendu 200, reçu " + response.status);
+        });
+        
+        if (response.body && response.body.length > 0) {
+            client.global.set("local_admin_token", response.body);
+            client.log("Token administrateur local enregistré");
+        }
+    } else {
+        client.log("Serveur local non disponible, tests ignorés");
+    }
+%}

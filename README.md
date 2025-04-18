@@ -16,11 +16,22 @@ projet-api/
 │   └── postgrest/
 │       └── postgrest.conf
 ├── docker-compose.yml
+├── docker-compose.test.yml
 ├── .env
+├── Makefile
 ├── README.md
-└── scripts/
-    ├── backup.sh
-    └── reset-db.sh
+├── scripts/
+│   ├── backup.sh
+│   ├── reset-db.sh
+│   ├── run-tests.sh
+│   ├── initialize-test-data.sh
+│   ├── test-diagnostics.sh
+│   └── curl-to-postman.sh
+└── tests/
+    └── postman/
+        ├── quiz-api-collection.json
+        ├── environment.json
+        └── results/
 ```
 
 ## 2. Étapes de mise en œuvre
@@ -42,11 +53,16 @@ projet-api/
 - Créer le fichier `docker-compose.yml` pour définir les services:
   - PostgreSQL
   - PostgREST
-  - (Optionnel) Swagger UI pour documenter l'API
-  - (Optionnel) pgAdmin pour administrer la base de données
+  - Swagger UI pour documenter l'API
+  - pgAdmin pour administrer la base de données
 
 ### Étape 5: Scripts utilitaires
 - Créer des scripts de sauvegarde et de restauration dans le dossier scripts/
+
+### Étape 6: Tests automatisés
+- Configurer Newman/Postman pour tester l'API
+- Créer des collections de tests pour les fonctionnalités principales
+- Intégrer les tests dans un workflow CI/CD
 
 ## 3. Liste des fichiers clés à créer
 
@@ -82,7 +98,40 @@ Définir les variables d'environnement nécessaires comme:
 - Configurer le rôle anonyme
 - Configurer les JWT (si authentification)
 
-## 4. Considérations pour la production
+## 4. Tests automatisés avec Postman/Newman
+
+Pour tester l'API de manière automatisée, ce projet inclut une solution basée sur Postman/Newman :
+
+### Configuration des tests
+- Collections Postman dans `tests/postman/`
+- Variables d'environnement dans `tests/postman/environment.json`
+- Résultats des tests dans `tests/postman/results/`
+
+### Exécution des tests
+```bash
+# Exécuter tous les tests
+make test
+
+# Exécuter uniquement les tests API
+make test-api
+
+# Initialiser les données de test
+make test-init
+
+# Voir le rapport de test dans le navigateur
+make test-report
+```
+
+### Scripts de test disponibles
+- `scripts/run-tests.sh`: Exécute les tests Postman avec Newman via Docker
+- `scripts/initialize-test-data.sh`: Prépare les données pour les tests
+- `scripts/test-diagnostics.sh`: Vérifie que l'environnement de test est correctement configuré
+- `scripts/curl-to-postman.sh`: Convertit les commandes cURL en collection Postman
+
+### Intégration CI/CD
+Le fichier `.github/workflows/api-tests.yml` configure les tests automatiques avec GitHub Actions.
+
+## 5. Considérations pour la production
 
 ### Sécurité
 - Configurer SSL/TLS pour les connexions chiffrées
@@ -98,10 +147,11 @@ Définir les variables d'environnement nécessaires comme:
 - Ajouter un service de monitoring comme Prometheus/Grafana
 - Configurer des alertes
 
-## 5. Déploiement
+## 6. Déploiement
 
 1. Exécuter `docker-compose up -d` pour démarrer tous les services
 2. Vérifier l'accès à l'API via les endpoints REST
 3. Tester les requêtes avec les filtres, la pagination, etc.
+4. Exécuter les tests automatisés pour vérifier que tout fonctionne correctement
 
-Cette feuille de route vous donne une structure complète pour mettre en place une API REST performante et sécurisée avec PostgREST, sans entrer dans les détails du code. Chaque fichier mentionné joue un rôle spécifique dans la configuration de votre système.
+Cette feuille de route vous donne une structure complète pour mettre en place une API REST performante, sécurisée et testée avec PostgREST.

@@ -1,0 +1,73 @@
+name: API Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environnement de test'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up environment
+        run: |
+          mkdir -p tests/postman/results
+          chmod +x scripts/run-tests.sh
+          chmod +x scripts/initialize-test-data.sh
+      
+      - name: Start services
+        run: docker-compose up -d
+      
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to be ready..."
+          sleep 15
+          curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:3000/
+      
+      - name: Initialize test data
+        run: ./scripts/initialize-test-data.sh http://localhost:3000
+      
+      - name: Run API tests with Newman
+        run: ./scripts/run-tests.sh
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: newman-test-results
+          path: tests/postman/results/
+      
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## API Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f tests/postman/results/*-junit.xml ]; then
+            TOTAL=$(grep -c "<testcase" tests/postman/results/*-junit.xml)
+            FAILED=$(grep -c "<failure" tests/postman/results/*-junit.xml)
+            PASSED=$((TOTAL - FAILED))
+            echo "✅ $PASSED tests passed" >> $GITHUB_STEP_SUMMARY
+            if [ $FAILED -gt 0 ]; then
+              echo "❌ $FAILED tests failed" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Stop services
+        if: always()
+        run: docker-compose down

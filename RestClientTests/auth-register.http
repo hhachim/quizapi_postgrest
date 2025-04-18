@@ -1,0 +1,141 @@
+@baseUrl = https://postgrest.pocs.hachim.fr/api
+@localUrl = http://localhost:3000
+
+### Variables pour l'inscription
+@new_username = nouveau_test_user
+@new_email = test_user@example.com
+@new_password = secure_password_123
+@first_name = Test
+@last_name = User
+
+### Inscription d'un nouvel utilisateur
+# @name registerUser
+POST {{baseUrl}}/rpc/register
+Content-Type: application/json
+
+{
+    "username": "{{new_username}}",
+    "email": "{{new_email}}",
+    "pass": "{{new_password}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}"
+}
+
+### Tests pour l'inscription
+> {%
+    // Vérifier si l'inscription a réussi (réponse = JWT) ou échoué (réponse = message d'erreur)
+    if (response.body && response.body.split('.').length === 3) {
+        // Succès - nous avons un JWT
+        client.test("L'inscription a réussi", function() {
+            client.assert(response.status === 200, "Statut de réponse attendu 200, reçu " + response.status);
+            client.assert(response.body.split('.').length === 3, "Un token JWT valide doit être renvoyé");
+        });
+        
+        // Enregistrer le token pour une utilisation ultérieure
+        client.global.set("new_user_token", response.body);
+        client.log("Token du nouvel utilisateur enregistré pour une utilisation ultérieure");
+    } else {
+        // Si l'utilisateur existe déjà, on devrait recevoir un message d'erreur
+        client.test("Message d'erreur approprié reçu si l'utilisateur existe déjà", function() {
+            const errorMsg = response.body;
+            client.assert(
+                errorMsg === "Email already exists" || errorMsg === "Username already exists", 
+                "Message d'erreur inattendu: " + errorMsg
+            );
+        });
+        client.log("Note: L'utilisateur semble déjà exister. Pour réexécuter avec succès, modifiez l'email et le nom d'utilisateur.");
+    }
+%}
+
+### Test avec un nom d'utilisateur déjà existant
+# @name registerDuplicateUsername
+POST {{baseUrl}}/rpc/register
+Content-Type: application/json
+
+{
+    "username": "admin",  // Nom d'utilisateur qui existe déjà
+    "email": "unique_email@example.com",
+    "pass": "{{new_password}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}"
+}
+
+### Tests pour le nom d'utilisateur en double
+> {%
+    client.test("L'erreur de nom d'utilisateur en double est détectée", function() {
+        client.assert(response.body === "Username already exists", "Message d'erreur attendu non reçu");
+    });
+%}
+
+### Test avec un email déjà existant
+# @name registerDuplicateEmail
+POST {{baseUrl}}/rpc/register
+Content-Type: application/json
+
+{
+    "username": "unique_username",
+    "email": "admin@quizapi.fr",  // Email qui existe déjà
+    "pass": "{{new_password}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}"
+}
+
+### Tests pour l'email en double
+> {%
+    client.test("L'erreur d'email en double est détectée", function() {
+        client.assert(response.body === "Email already exists", "Message d'erreur attendu non reçu");
+    });
+%}
+
+### Test d'inscription avec données manquantes (sans email)
+# @name registerMissingEmail
+POST {{baseUrl}}/rpc/register
+Content-Type: application/json
+
+{
+    "username": "test_missing_email",
+    "pass": "{{new_password}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}"
+}
+
+### Tests pour données manquantes
+> {%
+    client.test("L'erreur pour données manquantes est détectée", function() {
+        // Le serveur devrait renvoyer une erreur car l'email est requis
+        client.assert(response.status !== 200 || response.body === "Registration failed" || response.body.includes("error"), 
+            "L'inscription devrait échouer avec des données manquantes");
+    });
+%}
+
+### Inscription avec l'URL locale
+# @name localRegister
+POST {{localUrl}}/rpc/register
+Content-Type: application/json
+
+{
+    "username": "{{new_username}}_local",
+    "email": "local_{{new_email}}",
+    "pass": "{{new_password}}",
+    "first_name": "{{first_name}}",
+    "last_name": "{{last_name}}"
+}
+
+### Tests pour l'inscription locale
+> {%
+    // Ces tests seront exécutés uniquement si le serveur local est disponible
+    if (response.status !== 0) {
+        if (response.body && response.body.split && response.body.split('.').length === 3) {
+            client.test("L'inscription locale a réussi", function() {
+                client.assert(response.status === 200, "Statut de réponse attendu 200, reçu " + response.status);
+            });
+            
+            client.global.set("local_new_user_token", response.body);
+            client.log("Token local du nouvel utilisateur enregistré");
+        } else {
+            client.log("Inscription locale échouée : " + response.body);
+        }
+    } else {
+        client.log("Serveur local non disponible, tests ignorés");
+    }
+%}

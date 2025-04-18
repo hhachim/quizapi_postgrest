@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  newman:
+    image: postman/newman:alpine
+    container_name: newman
+    volumes:
+      - ./tests/postman:/etc/newman
+      - ./tests/postman/results:/etc/newman/results
+    command: >
+      run "/etc/newman/quiz-api-collection.json"
+      -e "/etc/newman/environment.json"
+      --reporters cli,htmlextra,junit
+      --reporter-htmlextra-export "/etc/newman/results/report.html"
+      --reporter-junit-export "/etc/newman/results/junit-report.xml"
+    networks:
+      - quizapi-network
+    depends_on:
+      - postgrest
+
+networks:
+  quizapi-network:
+    external: true

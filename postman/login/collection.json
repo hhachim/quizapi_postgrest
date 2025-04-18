@@ -1,0 +1,187 @@
+{
+    "info": {
+      "name": "QuizAPI - Authentication",
+      "description": "Collection pour tester les endpoints d'authentification de l'API Quiz",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "_postman_id": "9b1d8f23-57a1-4c97-8e5c-b89df6a3e7a1"
+    },
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:3000",
+        "type": "string",
+        "description": "URL de base de l'API (environnement local)"
+      },
+      {
+        "key": "token",
+        "value": "",
+        "type": "string",
+        "description": "Token JWT d'authentification"
+      }
+    ],
+    "item": [
+      {
+        "name": "Login",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"email\": \"admin@quizapi.fr\",\n    \"pass\": \"admin_password\"\n}"
+          },
+          "url": {
+            "raw": "{{baseUrl}}/rpc/login",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "rpc",
+              "login"
+            ]
+          },
+          "description": "Connecte un utilisateur et récupère un token JWT"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "const responseJson = pm.response.json();",
+                "if (responseJson && !responseJson.includes('Invalid')) {",
+                "    pm.collectionVariables.set('token', responseJson);",
+                "    pm.test('JWT token obtenu avec succès', function() {",
+                "        pm.expect(responseJson).to.be.a('string');",
+                "        pm.expect(responseJson.length).to.be.greaterThan(10);",
+                "    });",
+                "    console.log('Token JWT sauvegardé: ' + responseJson);",
+                "} else {",
+                "    pm.test('Échec de connexion', function() {",
+                "        pm.expect(responseJson).to.include('Invalid');",
+                "    });",
+                "}"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Register",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"pass\": \"password123\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\"\n}"
+          },
+          "url": {
+            "raw": "{{baseUrl}}/rpc/register",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "rpc",
+              "register"
+            ]
+          },
+          "description": "Inscrit un nouvel utilisateur"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "const responseJson = pm.response.json();",
+                "if (responseJson && !responseJson.includes('exists') && !responseJson.includes('failed')) {",
+                "    pm.collectionVariables.set('token', responseJson);",
+                "    pm.test('Inscription réussie et JWT token obtenu', function() {",
+                "        pm.expect(responseJson).to.be.a('string');",
+                "        pm.expect(responseJson.length).to.be.greaterThan(10);",
+                "    });",
+                "    console.log('Nouvel utilisateur créé avec succès, token JWT sauvegardé');",
+                "} else {",
+                "    pm.test('Échec d\\'inscription', function() {",
+                "        pm.expect(responseJson).to.match(/exists|failed/);",
+                "    });",
+                "}"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Vérifier le token JWT",
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/users?id=eq.current_setting('request.jwt.claim.user_id')::uuid&select=id,username,email,first_name,last_name",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "users"
+            ],
+            "query": [
+              {
+                "key": "id",
+                "value": "eq.current_setting('request.jwt.claim.user_id')::uuid"
+              },
+              {
+                "key": "select",
+                "value": "id,username,email,first_name,last_name"
+              }
+            ]
+          },
+          "description": "Vérifie si le token JWT est valide en récupérant les informations de l'utilisateur courant"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "if (pm.response.code === 200) {",
+                "    pm.test('Token JWT valide', function() {",
+                "        const responseJson = pm.response.json();",
+                "        pm.expect(responseJson).to.be.an('array');",
+                "        pm.expect(responseJson.length).to.be.greaterThan(0);",
+                "        pm.expect(responseJson[0]).to.have.property('id');",
+                "        pm.expect(responseJson[0]).to.have.property('username');",
+                "    });",
+                "} else {",
+                "    pm.test('Token JWT invalide ou expiré', function() {",
+                "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                "    });",
+                "}"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
