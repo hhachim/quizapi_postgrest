@@ -7,10 +7,9 @@ OUTPUT_DIR="tests/postman/results"
 TEST_NAME=$(basename "$COLLECTION_FILE" .json)
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 REPORT_NAME="${TEST_NAME}_${TIMESTAMP}"
+NEWMAN_IMAGE="newman-with-htmlextra"
 
 # Paramètre d'exclusion de tests via variable d'environnement
-# Peut être défini lors de l'appel, par exemple:
-# IGNORE_TESTS="--folder-exclude \"Admin Operations\"" make test-api
 IGNORE_TESTS=${IGNORE_TESTS:-""}
 
 # Vérifier si les fichiers existent
@@ -21,6 +20,24 @@ fi
 
 # Créer le répertoire de sortie s'il n'existe pas
 mkdir -p "$OUTPUT_DIR"
+
+# Vérifier si l'image newman-with-htmlextra existe, sinon la créer
+if ! docker image inspect $NEWMAN_IMAGE >/dev/null 2>&1; then
+    echo "Image $NEWMAN_IMAGE n'existe pas. Construction en cours..."
+    if [ -d "docker/newman" ] && [ -f "docker/newman/Dockerfile" ]; then
+        docker build -t $NEWMAN_IMAGE docker/newman
+        echo "Image $NEWMAN_IMAGE construite avec succès!"
+    # else
+    #     echo "Dossier docker/newman ou fichier Dockerfile manquant!"
+    #     echo "Création d'une image temporaire..."
+    #     # Créer Dockerfile temporaire et construire l'image
+    #     mkdir -p docker/newman
+    #     echo "FROM postman/newman:alpine" > docker/newman/Dockerfile
+    #     echo "RUN npm install -g newman-reporter-htmlextra" >> docker/newman/Dockerfile
+    #     docker build -t $NEWMAN_IMAGE docker/newman
+    #     echo "Image temporaire $NEWMAN_IMAGE construite avec succès!"
+    fi
+fi
 
 echo "Running Postman tests with Newman..."
 echo "Collection: $COLLECTION_FILE"
@@ -40,7 +57,7 @@ fi
 docker run --rm \
     --network quizapi-network \
     -v "$(pwd):/etc/newman" \
-    newman-with-htmlextra \
+    $NEWMAN_IMAGE \
     run "/etc/newman/$COLLECTION_FILE" \
     $ENV_PARAM \
     $IGNORE_TESTS \
