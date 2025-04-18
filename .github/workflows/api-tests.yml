@@ -65,6 +65,9 @@ jobs:
       #     name: newman-test-results
       #     path: tests/postman/results/
       
+      - name: Creating TraefikNetwork_wildcard.pocs.hachim.fr network
+        run: docker network create TraefikNetwork_wildcard.pocs.hachim.fr
+
       - name: Generate test summary
         if: always()
         run: |
