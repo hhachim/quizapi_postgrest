@@ -43,6 +43,9 @@ jobs:
           docker-compose --version
         continue-on-error: false
       
+      - name: Creating TraefikNetwork_wildcard.pocs.hachim.fr network
+        run: docker network create TraefikNetwork_wildcard.pocs.hachim.fr
+      
       - name: Start services
         run: docker-compose up -d
       
@@ -64,9 +67,6 @@ jobs:
       #   with:
       #     name: newman-test-results
       #     path: tests/postman/results/
-      
-      - name: Creating TraefikNetwork_wildcard.pocs.hachim.fr network
-        run: docker network create TraefikNetwork_wildcard.pocs.hachim.fr
 
       - name: Generate test summary
         if: always()
