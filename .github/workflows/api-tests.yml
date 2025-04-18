@@ -55,8 +55,7 @@ jobs:
           docker network ls
           echo "Containers:"
           docker ps
-          echo "Network inspection:"
-          docker network inspect quizapi-network
+
       - name: Inpsect postgrest
         run: |
           echo "begin inspect postgrest:"
