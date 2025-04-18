@@ -72,7 +72,7 @@ jobs:
         run: ./scripts/initialize-test-data.sh http://postgrest:3000
       
       - name: Run API tests with Newman
-        run: IGNORE_TESTS="--folder \"Categories\"" ./scripts/run-tests.sh
+        run: ./scripts/run-tests.sh
       
       # - name: Upload test results
       #   uses: actions/upload-artifact@v3.1.2

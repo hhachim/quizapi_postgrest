@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-COLLECTION_FILE=${1:-"tests/postman/quiz-api-collection.json"}
+COLLECTION_FILE=${1:-"tests/postman/quiz-api-categories-collection.json"}
 ENVIRONMENT_FILE=${2:-"tests/postman/environment.json"}
 OUTPUT_DIR="tests/postman/results"
 TEST_NAME=$(basename "$COLLECTION_FILE" .json)
