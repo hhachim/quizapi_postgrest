@@ -7,6 +7,7 @@
 3. **Finaliser le script d'initialisation pour PostgREST** - Créer un point d'entrée fonctionnel adapté au Docker compose actuel
 4. **Corriger la configuration .env** - Terminer la configuration des variables d'environnement pour les services
 5. **Configurer correctement les règles RLS** - Les tests semblent indiquer des problèmes d'autorisation, corriger les politiques
+6. **Script de suppression des données de test** - pour pouvoir repartir de zéro sur les données (équiv à truncate sur certaines tables)
 
 ## Majeurs (importants pour la progression)
 
