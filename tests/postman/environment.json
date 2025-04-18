@@ -6,7 +6,8 @@
       "key": "apiUrl",
       "value": "http://postgrest:3000",
       "type": "default",
-      "enabled": true
+      "enabled": true,
+      "description": "URL de l'API dans le réseau Docker - utilise le nom du conteneur"
     },
     {
       "key": "jwt_token",
@@ -34,6 +35,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2023-04-16T14:00:00.000Z",
+  "_postman_exported_at": "2025-04-18T12:00:00.000Z",
   "_postman_exported_using": "Postman/10.13.5"
 }

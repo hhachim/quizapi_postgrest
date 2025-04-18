@@ -7,6 +7,7 @@ OUTPUT_DIR="tests/postman/results"
 TEST_NAME=$(basename "$COLLECTION_FILE" .json)
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 REPORT_NAME="${TEST_NAME}_${TIMESTAMP}"
+NETWORK_NAME="quizapi-network"
 
 # Vérifier si les fichiers existent
 if [ ! -f "$COLLECTION_FILE" ]; then
@@ -26,9 +27,31 @@ else
     ENV_PARAM=""
 fi
 
-# Exécuter Newman avec Docker
+# Vérifier si le réseau Docker existe, le créer si nécessaire
+if ! docker network ls | grep -q $NETWORK_NAME; then
+    echo "Creating Docker network: $NETWORK_NAME"
+    docker network create $NETWORK_NAME
+fi
+
+# S'assurer que le conteneur PostgREST est connecté au réseau
+if docker ps -q --filter "name=postgrest" | grep -q .; then
+    # Le conteneur postgrest existe et tourne
+    if ! docker network inspect $NETWORK_NAME | grep -q "\"postgrest\""; then
+        echo "Connecting postgrest container to $NETWORK_NAME network..."
+        docker network connect $NETWORK_NAME postgrest
+    else
+        echo "postgrest container is already connected to $NETWORK_NAME network"
+    fi
+else
+    echo "Warning: PostgREST container not found or not running"
+    echo "Make sure your PostgREST service is running before executing tests"
+    echo "You can start it with: docker-compose up -d"
+fi
+
+# Exécuter Newman dans le même réseau Docker que PostgREST
+echo "Executing tests in the $NETWORK_NAME network..."
 docker run --rm \
-    --network quizapi-network \
+    --network $NETWORK_NAME \
     -v "$(pwd):/etc/newman" \
     postman/newman:alpine \
     run "/etc/newman/$COLLECTION_FILE" \
