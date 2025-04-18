@@ -2,7 +2,7 @@
 
 ## Vitaux (à faire immédiatement)
 
-1. **Corriger les erreurs de réseau dans les tests** - Les rapports de test montrent des erreurs "getaddrinfo ENOTFOUND postgrest" - vérifier le nom du service dans l'environnement de test Postman
+
 2. **Résoudre le conflit UUID vs SERIAL** - Harmoniser le type de clé primaire dans les tables (UUID dans certains scripts, SERIAL dans d'autres)
 3. **Finaliser le script d'initialisation pour PostgREST** - Créer un point d'entrée fonctionnel adapté au Docker compose actuel
 4. **Corriger la configuration .env** - Terminer la configuration des variables d'environnement pour les services
