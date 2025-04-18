@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Quiz API Tests" tests="7" time="0.000">
+  <testsuite name="Auth / Login Admin" id="e565bf40-cf49-49de-8af6-2c635d7c910b" timestamp="2025-04-18T12:40:06.503Z" tests="0" failures="0" errors="2" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+testScriptError: Unexpected token u in JSON at position 0
+---
+]]></system-err>
+  </testsuite>
+  <testsuite name="Categories / Get All Categories" id="34c9ed29-d0ba-4696-b606-22edc2595c0c" timestamp="2025-04-18T12:40:06.503Z" tests="3" failures="3" errors="1" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+]]></system-err>
+    <testcase name="Status code is 200" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected PostmanResponse{ …(5) } to have property 'code'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Categories / Get All Categories.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected PostmanResponse{ …(5) } to have property 'code'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected PostmanResponse{ …(5) } to have property 'code'
+   at Object.eval sandbox-script.js:1:2).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is an array" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Categories / Get All Categories.]]>
+        <![CDATA[Test description: Response is an array.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:2:2).]]>
+      </failure>
+    </testcase>
+    <testcase name="Categories contain required fields" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Categories / Get All Categories.]]>
+        <![CDATA[Test description: Categories contain required fields.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:3:2).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Quizzes / Get Public Quizzes" id="e9b422e3-36b2-4c99-afce-36974deaa2e4" timestamp="2025-04-18T12:40:06.503Z" tests="3" failures="3" errors="1" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+]]></system-err>
+    <testcase name="Status code is 200" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected PostmanResponse{ …(5) } to have property 'code'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Quizzes / Get Public Quizzes.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected PostmanResponse{ …(5) } to have property 'code'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected PostmanResponse{ …(5) } to have property 'code'
+   at Object.eval sandbox-script.js:1:3).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is an array" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Quizzes / Get Public Quizzes.]]>
+        <![CDATA[Test description: Response is an array.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:2:3).]]>
+      </failure>
+    </testcase>
+    <testcase name="Only published and public quizzes are returned" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Quizzes / Get Public Quizzes.]]>
+        <![CDATA[Test description: Only published and public quizzes are returned.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:3:3).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Quizzes / Get Quiz By ID" id="d29e4af2-e52b-4e47-a0b7-96640a9970eb" timestamp="2025-04-18T12:40:06.503Z" tests="1" failures="1" errors="1" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+]]></system-err>
+    <testcase name="Status code is either 200 or 404" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected undefined to be one of [ 200, 404 ]">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Quizzes / Get Quiz By ID.]]>
+        <![CDATA[Test description: Status code is either 200 or 404.]]>
+        <![CDATA[Error message: expected undefined to be one of [ 200, 404 ].]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to be one of [ 200, 404 ]
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Tags / Get All Tags" id="ca5886fb-a28f-4bc9-82cc-e4724c81f87f" timestamp="2025-04-18T12:40:06.503Z" tests="2" failures="2" errors="2" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+testScriptError: Unexpected token u in JSON at position 0
+---
+]]></system-err>
+    <testcase name="Status code is 200" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected PostmanResponse{ …(5) } to have property 'code'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Tags / Get All Tags.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected PostmanResponse{ …(5) } to have property 'code'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected PostmanResponse{ …(5) } to have property 'code'
+   at Object.eval sandbox-script.js:1:5).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is an array" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Tags / Get All Tags.]]>
+        <![CDATA[Test description: Response is an array.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:2:5).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Admin Operations / Create New Tag" id="da732b4e-1d72-4bfd-9f63-f4afce5cb227" timestamp="2025-04-18T12:40:06.503Z" tests="2" failures="2" errors="1" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+]]></system-err>
+    <testcase name="Status code is 201" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected PostmanResponse{ …(5) } to have property 'code'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Create New Tag.]]>
+        <![CDATA[Test description: Status code is 201.]]>
+        <![CDATA[Error message: expected PostmanResponse{ …(5) } to have property 'code'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected PostmanResponse{ …(5) } to have property 'code'
+   at Object.eval sandbox-script.js:1:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response contains created tag" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="Unexpected token u in JSON at position 0">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Create New Tag.]]>
+        <![CDATA[Test description: Response contains created tag.]]>
+        <![CDATA[Error message: Unexpected token u in JSON at position 0.]]>
+        <![CDATA[Stacktrace: JSONError: Unexpected token u in JSON at position 0
+   at Object.eval sandbox-script.js:2:6).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Admin Operations / Delete Created Tag" id="fa3b1f18-ca00-4a0b-af53-a350aa41a6ad" timestamp="2025-04-18T12:40:06.503Z" tests="1" failures="1" errors="1" time="0.000">
+    <system-err><![CDATA[Iteration: 0
+RequestError: Error: getaddrinfo ENOTFOUND postgrest
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:109:26)
+
+---
+]]></system-err>
+    <testcase name="Status code is 204" time="0.000" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected PostmanResponse{ …(5) } to have property 'code'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Delete Created Tag.]]>
+        <![CDATA[Test description: Status code is 204.]]>
+        <![CDATA[Error message: expected PostmanResponse{ …(5) } to have property 'code'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected PostmanResponse{ …(5) } to have property 'code'
+   at Object.eval sandbox-script.js:1:7).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

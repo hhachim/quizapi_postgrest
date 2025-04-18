@@ -1,4 +1,4 @@
-.PHONY: help start stop test test-api test-init test-report clean backup reset
+.PHONY: help start stop test test-api test-init test-report test-load test-diagnostics docs clean backup reset
 
 # Couleurs pour une meilleure lisibilité
 GREEN=\033[0;32m
@@ -28,8 +28,8 @@ stop: ## Arrête les services de l'API Quiz
 	docker-compose down
 	@echo "${GREEN}Services arrêtés !${NC}"
 
-# Tests
-test: test-init test-api ## Exécute tous les tests
+# Tests fonctionnels
+test: test-init test-api ## Exécute tous les tests fonctionnels
 
 test-api: ## Exécute les tests Postman/Newman
 	@echo "${GREEN}Exécution des tests API...${NC}"
@@ -53,6 +53,33 @@ test-report: ## Ouvre le dernier rapport de test dans le navigateur par défaut
 		echo "${RED}Aucun rapport trouvé !${NC}"; \
 	fi
 
+# Tests de charge
+test-load: ## Exécute les tests de charge avec k6
+	@echo "${GREEN}Exécution des tests de charge...${NC}"
+	@chmod +x scripts/run-load-tests.sh
+	@./scripts/run-load-tests.sh http://localhost:3000
+	@echo "${GREEN}Tests de charge terminés !${NC}"
+
+# Diagnostics
+test-diagnostics: ## Exécute les diagnostics des tests
+	@echo "${GREEN}Exécution des diagnostics...${NC}"
+	@chmod +x scripts/test-diagnostics.sh
+	@./scripts/test-diagnostics.sh http://localhost:3000
+	@echo "${GREEN}Diagnostics terminés !${NC}"
+
+# Documentation
+docs: ## Génère la documentation API
+	@echo "${GREEN}Génération de la documentation API...${NC}"
+	@chmod +x scripts/generate-api-docs.sh
+	@./scripts/generate-api-docs.sh
+	@echo "${GREEN}Documentation générée !${NC}"
+
+curl-to-postman: ## Convertit les commandes cURL en collection Postman
+	@echo "${GREEN}Conversion des commandes cURL en collection Postman...${NC}"
+	@chmod +x scripts/curl-to-postman.sh
+	@./scripts/curl-to-postman.sh CurlTests.md
+	@echo "${GREEN}Conversion terminée !${NC}"
+
 # Maintenance
 backup: ## Crée une sauvegarde de la base de données
 	@echo "${GREEN}Création d'une sauvegarde...${NC}"
@@ -74,4 +101,14 @@ reset: ## Réinitialise la base de données (ATTENTION: toutes les données sero
 clean: ## Nettoie les rapports de test
 	@echo "${YELLOW}Nettoyage des rapports de test...${NC}"
 	@rm -rf tests/postman/results/*
+	@rm -rf tests/load/results/*
 	@echo "${GREEN}Nettoyage terminé !${NC}"
+
+# Développement
+dev-env: ## Prépare l'environnement de développement
+	@echo "${GREEN}Préparation de l'environnement de développement...${NC}"
+	@mkdir -p tests/postman/results
+	@mkdir -p tests/load/results
+	@mkdir -p docs/api
+	@chmod +x scripts/*.sh
+	@echo "${GREEN}Environnement prêt !${NC}"
