@@ -45,12 +45,12 @@ jobs:
       - name: Run API tests with Newman
         run: ./scripts/run-tests.sh
       
-      - name: Upload test results
-        uses: actions/upload-artifact@v3.1.2
-        if: always()
-        with:
-          name: newman-test-results
-          path: tests/postman/results/
+      # - name: Upload test results
+      #   uses: actions/upload-artifact@v3.1.2
+      #   if: always()
+      #   with:
+      #     name: newman-test-results
+      #     path: tests/postman/results/
       
       - name: Generate test summary
         if: always()
