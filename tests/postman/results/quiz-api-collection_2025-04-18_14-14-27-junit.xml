@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Quiz API Tests" tests="7" time="0.186">
+  <testsuite name="Auth / Login Admin" id="b58f97a7-4095-480f-8dd3-5eaaa52a1a1c" timestamp="2025-04-18T14:14:30.720Z" tests="2" failures="0" errors="0" time="0.143">
+    <testcase name="Status code is 200" time="0.143" classname="QuizApiTests"/>
+    <testcase name="Response contains JWT token" time="0.143" classname="QuizApiTests"/>
+  </testsuite>
+  <testsuite name="Categories / Get All Categories" id="6ea29c54-d75a-4519-8034-0afcee509b98" timestamp="2025-04-18T14:14:30.720Z" tests="3" failures="0" errors="0" time="0.010">
+    <testcase name="Status code is 200" time="0.010" classname="QuizApiTests"/>
+    <testcase name="Response is an array" time="0.010" classname="QuizApiTests"/>
+    <testcase name="Categories contain required fields" time="0.010" classname="QuizApiTests"/>
+  </testsuite>
+  <testsuite name="Quizzes / Get Public Quizzes" id="0ff272c9-cca8-4cc5-927e-918873e2aa64" timestamp="2025-04-18T14:14:30.720Z" tests="3" failures="0" errors="0" time="0.009">
+    <testcase name="Status code is 200" time="0.009" classname="QuizApiTests"/>
+    <testcase name="Response is an array" time="0.009" classname="QuizApiTests"/>
+    <testcase name="Only published and public quizzes are returned" time="0.009" classname="QuizApiTests"/>
+  </testsuite>
+  <testsuite name="Quizzes / Get Quiz By ID" id="1acebf1a-a23b-40fe-af3e-f810abd4015c" timestamp="2025-04-18T14:14:30.720Z" tests="1" failures="1" errors="0" time="0.006">
+    <testcase name="Status code is either 200 or 404" time="0.006" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected 400 to be one of [ 200, 404 ]">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Quizzes / Get Quiz By ID.]]>
+        <![CDATA[Test description: Status code is either 200 or 404.]]>
+        <![CDATA[Error message: expected 400 to be one of [ 200, 404 ].]]>
+        <![CDATA[Stacktrace: AssertionError: expected 400 to be one of [ 200, 404 ]
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Tags / Get All Tags" id="12c7b5de-bd5c-4501-b93e-3bf6dfb6e110" timestamp="2025-04-18T14:14:30.720Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status code is 200" time="0.007" classname="QuizApiTests"/>
+    <testcase name="Response is an array" time="0.007" classname="QuizApiTests"/>
+  </testsuite>
+  <testsuite name="Admin Operations / Create New Tag" id="97395af2-f452-40f1-a7d4-3d696883c444" timestamp="2025-04-18T14:14:30.720Z" tests="2" failures="2" errors="0" time="0.006">
+    <testcase name="Status code is 201" time="0.006" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected response to have status code 201 but got 401">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Create New Tag.]]>
+        <![CDATA[Test description: Status code is 201.]]>
+        <![CDATA[Error message: expected response to have status code 201 but got 401.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 201 but got 401
+   at Object.eval sandbox-script.js:1:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response contains created tag" time="0.006" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected { code: '42501', details: null, …(2) } to be an array">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Create New Tag.]]>
+        <![CDATA[Test description: Response contains created tag.]]>
+        <![CDATA[Error message: expected { code: '42501', details: null, …(2) } to be an array.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { code: '42501', details: null, …(2) } to be an array
+   at Object.eval sandbox-script.js:2:6).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Admin Operations / Delete Created Tag" id="dfd502cb-9f62-41ce-ac3b-493f1b6a0f9a" timestamp="2025-04-18T14:14:30.720Z" tests="1" failures="1" errors="0" time="0.005">
+    <testcase name="Status code is 204" time="0.005" classname="QuizApiTests">
+      <failure type="AssertionFailure" message="expected response to have status code 204 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 8a7b4e9c-6d5f-4e3c-8c2a-1f2a3b4c5d6e.]]>
+        <![CDATA[Collection name: Quiz API Tests.]]>
+        <![CDATA[Request name: Admin Operations / Delete Created Tag.]]>
+        <![CDATA[Test description: Status code is 204.]]>
+        <![CDATA[Error message: expected response to have status code 204 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 204 but got 400
+   at Object.eval sandbox-script.js:1:7).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

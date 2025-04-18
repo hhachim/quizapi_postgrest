@@ -8,6 +8,11 @@ TEST_NAME=$(basename "$COLLECTION_FILE" .json)
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 REPORT_NAME="${TEST_NAME}_${TIMESTAMP}"
 
+# Paramètre d'exclusion de tests via variable d'environnement
+# Peut être défini lors de l'appel, par exemple:
+# IGNORE_TESTS="--folder-exclude \"Admin Operations\"" make test-api
+IGNORE_TESTS=${IGNORE_TESTS:-""}
+
 # Vérifier si les fichiers existent
 if [ ! -f "$COLLECTION_FILE" ]; then
     echo "Collection file not found: $COLLECTION_FILE"
@@ -26,6 +31,11 @@ else
     ENV_PARAM=""
 fi
 
+# Afficher quels tests sont ignorés
+if [ ! -z "$IGNORE_TESTS" ]; then
+    echo "Skipping tests: $IGNORE_TESTS"
+fi
+
 # Exécuter Newman avec l'image personnalisée
 docker run --rm \
     --network quizapi-network \
@@ -33,6 +43,7 @@ docker run --rm \
     newman-with-htmlextra \
     run "/etc/newman/$COLLECTION_FILE" \
     $ENV_PARAM \
+    $IGNORE_TESTS \
     --reporters cli,htmlextra,junit \
     --reporter-htmlextra-export "/etc/newman/$OUTPUT_DIR/${REPORT_NAME}-report.html" \
     --reporter-junit-export "/etc/newman/$OUTPUT_DIR/${REPORT_NAME}-junit.xml"

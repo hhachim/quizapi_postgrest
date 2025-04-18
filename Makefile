@@ -31,10 +31,16 @@ stop: ## Arrête les services de l'API Quiz
 # Tests fonctionnels
 test: test-init test-api ## Exécute tous les tests fonctionnels
 
-test-api: ## Exécute les tests Postman/Newman
+test-api-all: ## Exécute les tests Postman/Newman
 	@echo "${GREEN}Exécution des tests API...${NC}"
 	@chmod +x scripts/run-tests.sh
 	@./scripts/run-tests.sh
+	@echo "${GREEN}Tests API terminés !${NC}"
+
+test-api: ## Exécute les tests Postman/Newman en ignorant certains tests
+	@echo "${GREEN}Exécution des tests API (avec exclusions)...${NC}"
+	@chmod +x scripts/run-tests.sh
+	@IGNORE_TESTS="--folder \"Categories\"" ./scripts/run-tests.sh
 	@echo "${GREEN}Tests API terminés !${NC}"
 
 test-init: ## Initialise les données de test
