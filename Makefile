@@ -43,16 +43,6 @@ test-init: ## Initialise les données de test
 	@./scripts/initialize-test-data.sh http://localhost:3000
 	@echo "${GREEN}Données de test initialisées !${NC}"
 
-test-report: ## Ouvre le dernier rapport de test dans le navigateur par défaut
-	@echo "${GREEN}Ouverture du rapport de test...${NC}"
-	@latest_report=$$(find tests/postman/results -name "*.html" -type f -printf "%T@ %p\n" | sort -n | tail -1 | cut -f2- -d" "); \
-	if [ -n "$$latest_report" ]; then \
-		echo "Ouverture de $$latest_report"; \
-		open "$$latest_report" 2>/dev/null || xdg-open "$$latest_report" 2>/dev/null || echo "${RED}Impossible d'ouvrir le rapport automatiquement${NC}"; \
-	else \
-		echo "${RED}Aucun rapport trouvé !${NC}"; \
-	fi
-
 # Tests de charge
 test-load: ## Exécute les tests de charge avec k6
 	@echo "${GREEN}Exécution des tests de charge...${NC}"
