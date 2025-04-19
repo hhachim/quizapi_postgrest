@@ -23,12 +23,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        continue-on-error: false
       
       - name: Set up environment
         run: |
           mkdir -p tests/postman/results
           chmod +x scripts/run-tests.sh
           chmod +x scripts/initialize-test-data.sh
+        continue-on-error: false
 
       # - name: Install Docker using Docker's official script
       #   run: |
@@ -48,6 +50,7 @@ jobs:
       
       - name: Start services
         run: docker-compose up -d
+        continue-on-error: false
 
       - name: List networks and containers
         run: |
@@ -55,11 +58,13 @@ jobs:
           docker network ls
           echo "Containers:"
           docker ps
+        continue-on-error: false
 
       - name: Inpsect postgrest
         run: |
           echo "begin inspect postgrest:"
           docker inspect postgrest
+        continue-on-error: false
       
       - name: Wait for services to be ready
         run: |
@@ -67,12 +72,15 @@ jobs:
           sleep 15
           # Exécuter curl dans un conteneur Docker connecté au réseau quizapi-network
           docker run --rm --network quizapi_postgrest_quizapi-network appropriate/curl --retry 5 --retry-delay 5 --retry-connrefused http://postgrest:3000/
-      
+        continue-on-error: false
+
       - name: Initialize test data
         run: ./scripts/initialize-test-data.sh http://postgrest:3000
+        continue-on-error: false
       
       - name: Run API tests with Newman
         run: ./scripts/run-tests.sh
+        continue-on-error: false
       
       # - name: Upload test results
       #   uses: actions/upload-artifact@v3.1.2
