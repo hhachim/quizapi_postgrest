@@ -1,6 +1,6 @@
 FROM node:18-alpine AS deps
 WORKDIR /app
-# Copier package.json depuis le répertoire app
+# Utiliser seulement package.json puisque package-lock.json n'existe pas
 COPY app/package.json ./
 RUN npm install
 
@@ -12,15 +12,16 @@ RUN npm run build
 
 FROM node:18-alpine AS runner
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV development
 
+# Copier node_modules nécessaires
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
 
 EXPOSE 3000
 ENV PORT 3000
 
-#CMD ["node", "server.js"]
+# Utiliser npm run dev pour le développement
 CMD ["npm", "run", "dev"]
-#CMD ["node_modules/.bin/next2", "dev"]

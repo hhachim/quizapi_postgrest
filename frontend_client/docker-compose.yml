@@ -14,8 +14,8 @@ services:
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://postgrest:3000
-    #command: npm run dev
-    command: npx next dev
+    command: npm run dev
+    #command: npx next dev
     networks:
       - quizapi-network
       - traefik_network
