@@ -4,19 +4,30 @@ services:
       context: ./app
       dockerfile: ../Dockerfile
     container_name: quiz-frontend
-    ports:
-      - "3001:3000"
+    # Retrait du mapping de port puisque l'accès se fera via Traefik
+    # ports:
+    #   - "3001:3000"
     volumes:
       - ./app:/app
       - /app/node_modules
       - /app/.next
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://postgrest:3000
     command: npm run dev
     networks:
       - quizapi-network
+      - traefik_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.pocs.hachim.fr`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
 networks:
   quizapi-network:
     external: true
+  traefik_network:
+    external: true
+    name: TraefikNetwork_wildcard.pocs.hachim.fr
