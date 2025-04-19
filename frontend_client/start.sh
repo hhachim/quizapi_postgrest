@@ -14,8 +14,9 @@ if ! docker network ls | grep -q TraefikNetwork_wildcard.pocs.hachim.fr; then
 fi
 
 # Démarrer les conteneurs
-#docker compose build --no-cache frontend
-docker compose up
+# docker compose build --no-cache && docker compose up --force-recreate
+docker compose build --no-cache frontend
+docker compose up --force-recreate
 
 echo "Le frontend est disponible sur:"
 echo "- http://localhost:3001 (accès direct)"
