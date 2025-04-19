@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const Home: NextPage = () => {
   return (
@@ -19,7 +20,7 @@ const Home: NextPage = () => {
         </p>
 
         <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          
+          <Link
             href="/auth/login"
             className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
@@ -27,9 +28,9 @@ const Home: NextPage = () => {
             <p className="mt-4 text-xl">
               Access your account to take quizzes and track your progress.
             </p>
-          </a>
+          </Link>
 
-          
+          <Link
             href="/auth/register"
             className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
@@ -37,12 +38,12 @@ const Home: NextPage = () => {
             <p className="mt-4 text-xl">
               Create a new account to start your quiz journey!
             </p>
-          </a>
+          </Link>
         </div>
       </main>
 
       <footer className="flex items-center justify-center w-full h-24 border-t">
-        
+        <a
           className="flex items-center justify-center"
           href="https://github.com/yourusername/quiz-app"
           target="_blank"
