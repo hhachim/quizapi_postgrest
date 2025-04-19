@@ -2,9 +2,11 @@ name: API Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    #branches: [ main, develop ]
+    branches: mvp
   pull_request:
-    branches: [ main, develop ]
+    #branches: [ main, develop ]
+    branches: mvp
   workflow_dispatch:
     inputs:
       environment:
